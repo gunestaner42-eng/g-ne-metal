@@ -11,7 +11,7 @@ bronz:{name:"Bronz",density:8.8},aluminyum:{name:"Alüminyum",density:2.7},
 const variants={
 bakir:[["Elektrolitik bakır",8.96]],
 "ozel-bakir-urunler":[["Bakır",8.96]],
-aluminyum:[["Alüminyum (genel)",2.70],["Alüminyum 7075",2.81],["Alüminyum 6061",2.70],["Alüminyum 6082",2.70],["Alüminyum 5083",2.66]],
+aluminyum:[["Alüminyum (genel)",2.70],["Alüminyum 7075",2.81],["Alüminyum 6061",2.70],["Alüminyum 6082",2.70],["Alüminyum 6013",2.72],["Alüminyum 5083",2.66]],
 bronz:[["Bronz (genel)",8.80],["12 kalay bronz (CuSn12)",8.80],["5 kalay bronz (CuSn5)",8.90],["RG5 / CuSn5Zn5Pb5",8.80]],
 pirinc:[["Pirinç (genel)",8.50]],
 "muhendislik-plastik":[["Delrin / POM",1.41],["PE1000",0.93],["PE500",0.95],["PTFE / Teflon",2.17],["Kestamid / PA6G",1.15]],
