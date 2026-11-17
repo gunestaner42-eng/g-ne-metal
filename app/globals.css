@@ -32,3 +32,37 @@
 @media(max-width:760px){.hero-inner{grid-template-columns:1fr;min-height:0;padding-top:0;padding-bottom:28px;gap:12px}.hero-content{padding:46px 0 20px}.hero-content h1{font-size:clamp(34px,8vw,50px)}.hero-trust{margin-top:25px}.hero-showcase{display:block;padding:12px}.hero-showcase-image{height:230px}.hero-showcase-caption{padding:14px 2px 2px}.hero-bottom{padding-bottom:22px}}
 @media(max-width:420px){.hero-showcase-image{height:195px}.hero-showcase-caption strong{font-size:13px}.hero-trust{gap:18px}}
 @media(prefers-reduced-motion:reduce){.hero-content,.hero-showcase{animation:none}}
+
+/* Premium + kurumsal: ana ekran ve ürün geçişi */
+.premium-hero{isolation:isolate}
+.hero-grid-lines{position:absolute;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(90deg,transparent 25%,black)}
+.premium-hero .hero-inner{min-height:620px;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,78px)}
+.premium-hero .hero-content h1{max-width:690px;font-size:clamp(42px,5.2vw,70px);letter-spacing:-2.5px;line-height:1.08}
+.premium-hero .hero-content>p{font-size:17px;line-height:1.85}
+.premium-hero .hero-showcase{padding:14px;background:linear-gradient(155deg,#ffffff17,#ffffff05);border:1px solid #ffffff3b;border-radius:20px;box-shadow:0 28px 70px #050a1390}
+.premium-hero .hero-showcase-image{position:relative;height:350px;background:radial-gradient(circle at 50% 40%,#dce5ed,#8294a7);border-radius:12px}
+.premium-hero .hero-showcase-halo{position:absolute;inset:14%;border-radius:50%;background:#ffffff45;filter:blur(45px)}
+.premium-hero .hero-showcase-image img{position:relative;z-index:1;object-fit:contain;padding:22px;transition:transform .4s ease}
+.premium-hero .hero-showcase:hover img{transform:scale(1.035)}
+.premium-hero .hero-trust{gap:35px}
+.hero-bottom-right{display:flex;align-items:center;gap:16px}
+.hero-slide-control{display:grid;place-items:center;width:30px;height:30px;border:1px solid #ffffff55;border-radius:50%;background:transparent;color:#fff;font-size:12px}
+.hero-slide-control:hover{background:#ffffff22}
+.home-category-strip{background:#fff;border-bottom:1px solid var(--border)}
+.home-category-inner{display:grid;grid-template-columns:210px 1fr;gap:25px;align-items:center;padding-top:26px;padding-bottom:26px}
+.home-category-intro{display:flex;flex-direction:column;gap:7px}
+.home-category-intro small{font-size:10px;color:var(--red);font-weight:800;letter-spacing:1.6px}
+.home-category-intro strong{font-size:15px;line-height:1.4}
+.home-category-links{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+.home-category-links a{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:15px 12px;background:#f4f7fa;border:1px solid #e5e9ef;border-radius:7px;font-size:12px;font-weight:800;transition:border-color .2s,transform .2s}
+.home-category-links a span{color:var(--red);font-size:17px}
+.home-category-links a:hover{border-color:var(--red);transform:translateY(-2px)}
+.products-section{background:#f7f9fc}
+.products-section .product-card{box-shadow:0 8px 26px #15253708}
+.products-section .product-art{background:linear-gradient(150deg,#f1f5f8,#e6edf4)}
+.products-section .product-art img{transition:transform .3s ease}
+.products-section .product-card:hover .product-art img{transform:scale(1.05)}
+@media(max-width:1020px){.premium-hero .hero-inner{grid-template-columns:1fr 1fr;min-height:540px;gap:24px}.premium-hero .hero-content h1{font-size:clamp(37px,4.6vw,56px)}.premium-hero .hero-showcase-image{height:280px}.home-category-inner{grid-template-columns:1fr;gap:16px}}
+@media(max-width:760px){.premium-hero .hero-inner{grid-template-columns:1fr;min-height:0;gap:14px}.premium-hero .hero-content h1{font-size:clamp(36px,8vw,50px);letter-spacing:-1.5px}.premium-hero .hero-showcase-image{height:250px}.home-category-inner{padding-top:22px;padding-bottom:22px}.home-category-links{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:5px}.home-category-links a{flex:0 0 150px;scroll-snap-align:start}.hero-grid-lines{background-size:40px 40px}}
+@media(max-width:420px){.premium-hero .hero-showcase-image{height:205px}.premium-hero .hero-content h1{font-size:36px}}
+@media(prefers-reduced-motion:reduce){.premium-hero .hero-showcase-image img,.home-category-links a,.products-section .product-art img{transition:none}}
