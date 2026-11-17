@@ -1,0 +1,264 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f8fa;
+  color: #20242b;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  width: min(1180px, 92%);
+  margin: auto;
+}
+
+/* ÜST MENÜ */
+
+.header {
+  background: #151b25;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 3px 15px #0002;
+}
+
+.nav {
+  min-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: #e33434;
+}
+
+nav {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+nav a {
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .2s;
+}
+
+nav a:hover {
+  color: #e33434;
+}
+
+/* ANA SAYFA */
+
+.hero {
+  min-height: 470px;
+  display: flex;
+  align-items: center;
+  color: white;
+  background:
+    linear-gradient(110deg, #111a29ee, #172438bb),
+    linear-gradient(135deg, #303d50, #101722);
+}
+
+.hero p {
+  color: #ff6565;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+
+.hero h1 {
+  font-size: clamp(42px, 7vw, 80px);
+  margin: 15px 0;
+  font-weight: 900;
+}
+
+.hero h2 {
+  font-size: clamp(20px, 3vw, 30px);
+  font-weight: 400;
+  margin-bottom: 35px;
+}
+
+.btn {
+  display: inline-block;
+  background: #d92f35;
+  color: white;
+  padding: 16px 28px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.btn:hover {
+  background: #aa1f25;
+  transform: translateY(-2px);
+}
+
+/* ÜRÜNLER */
+
+.section {
+  padding-top: 75px;
+  padding-bottom: 75px;
+}
+
+.section h2 {
+  font-size: clamp(27px, 4vw, 38px);
+  margin: 0 0 15px;
+}
+
+.section > p {
+  color: #697180;
+}
+
+.search {
+  width: 100%;
+  padding: 17px 20px;
+  border: 1px solid #d8dce2;
+  border-radius: 7px;
+  font-size: 16px;
+  margin: 25px 0 30px;
+  outline: none;
+}
+
+.search:focus {
+  border-color: #d92f35;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.product {
+  background: white;
+  border: 1px solid #e9ebef;
+  border-radius: 10px;
+  overflow: hidden;
+  padding-bottom: 25px;
+  box-shadow: 0 4px 18px #00000008;
+  transition: .2s;
+}
+
+.product:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px #00000015;
+}
+
+.product-image {
+  height: 190px;
+  background: linear-gradient(135deg, #dce1e8, #aeb8c6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #354357;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.product h3,
+.product p,
+.product a {
+  margin-left: 22px;
+  margin-right: 22px;
+}
+
+.product h3 {
+  font-size: 23px;
+  margin-top: 22px;
+}
+
+.product p {
+  color: #687281;
+  line-height: 1.6;
+}
+
+.product a {
+  color: #ce292f;
+  font-weight: bold;
+}
+
+/* HAKKIMIZDA */
+
+.about {
+  background: #e9edf2;
+}
+
+.about p {
+  max-width: 750px;
+  line-height: 1.9;
+  color: #505967;
+}
+
+/* ALT BİLGİ */
+
+.footer {
+  background: #151b25;
+  color: #d5d9e0;
+  text-align: center;
+  padding: 35px 15px;
+}
+
+/* TELEFON VE TABLET */
+
+@media (max-width: 900px) {
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav {
+    flex-direction: column;
+    padding: 20px 0;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 600px) {
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    min-height: 380px;
+    text-align: center;
+  }
+
+  .section {
+    padding-top: 45px;
+    padding-bottom: 45px;
+  }
+
+  .logo {
+    font-size: 24px;
+  }
+
+  nav a {
+    font-size: 13px;
+  }
+}
