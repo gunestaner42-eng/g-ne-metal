@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import { products } from "./products";
 const slides = [
-  { tag: "1988'DEN BUGÜNE", title: "Metalde güvenilir çözüm ortağınız", detail: "Bakır, bronz, alüminyum ve pirinç ürünlerinde geniş seçenekler.", label: "Ürünleri Keşfet", href: "#urunler" },
-  { tag: "TEKNİK ÇÖZÜMLER", title: "Mühendislik plastikleri", detail: "Endüstriyel ihtiyaçlarınız için farklı malzeme alternatifleri.", label: "Ürünleri İncele", href: "#urunler" },
-  { tag: "ÖZEL ÜRÜNLER", title: "İhtiyacınıza uygun malzemeler", detail: "Özel ürünler ve teknik bilgi için bizimle iletişime geçin.", label: "Teklif İsteyin", href: "#iletisim" },
+  { tag: "1988'DEN BUGÜNE", title: "Metalde güvenilir çözüm ortağınız", detail: "Bakır, bronz, alüminyum ve pirinç ürünlerinde geniş seçenekler. Endüstriyel ihtiyaçlarınız için Güneş Metal yanınızda.", label: "Ürünleri Keşfet", href: "#urunler", image: products.find(p => p.slug === "bakir")?.image, imageLabel: "Bakır ürünleri", category: "METAL ÜRÜNLERİ", note: "Bakır · Bronz · Pirinç · Alüminyum" },
+  { tag: "GENİŞ ÜRÜN YELPAZESİ", title: "Sanayiye özel metal çözümleri", detail: "Farklı alaşım ve ürün formlarını inceleyin, ölçülerinize uygun malzemeyi kolayca bulun.", label: "Metalleri İncele", href: "#urunler", image: products.find(p => p.slug === "bronz")?.image, imageLabel: "Bronz ürünleri", category: "ENDÜSTRİYEL METALLER", note: "Kaliteye göre ürün ve ağırlık hesaplama" },
+  { tag: "MÜHENDİSLİK ÇÖZÜMLERİ", title: "Teknik plastiklerde doğru malzeme", detail: "Delrin, Kestamid, Teflon ve polietilen seçenekleriyle projeleriniz için teknik malzeme alternatifleri.", label: "Plastikleri İncele", href: "/urunler/muhendislik-plastik", image: products.find(p => p.slug === "muhendislik-plastik")?.image, imageLabel: "Mühendislik plastikleri", category: "MÜHENDİSLİK PLASTİKLERİ", note: "Yuvarlak çubuk · Levha" },
 ];
 
 export default function Home() {
@@ -56,9 +56,14 @@ export default function Home() {
               <span className="eyebrow"><i/> {slides[slide].tag}</span>
               <h1>{slides[slide].title}</h1>
               <p>{slides[slide].detail}</p>
-              <div className="hero-actions"><a className="button primary" href={slides[slide].href}>{slides[slide].label} <span>↗</span></a><a className="button outline" href="#hakkimizda">Bizi Tanıyın</a></div>
+              <div className="hero-actions"><a className="button primary" href={slides[slide].href}>{slides[slide].label} <span>↗</span></a><a className="button outline" href="#iletisim">Teklif Al ↗</a></div>
+              <div className="hero-trust"><span><strong>1988</strong> Kuruluş</span><span><strong>Metal & Plastik</strong> Ürün grupları</span></div>
             </div>
-            <div className="hero-visual" aria-hidden="true"><div className="metal-ring ring-outer"/><div className="metal-ring ring-inner"/><div className="metal-core">GM</div></div>
+            <div className="hero-showcase" key={slides[slide].imageLabel}>
+              <div className="hero-showcase-top"><span className="hero-showcase-kicker">GÜNEŞ METAL / ÜRÜN VİTRİNİ</span><span className="hero-showcase-number">0{slide + 1} / 0{slides.length}</span></div>
+              <div className="hero-showcase-image"><img src={slides[slide].image} alt={slides[slide].imageLabel} fetchPriority={slide === 0 ? "high" : "auto"} /></div>
+              <div className="hero-showcase-caption"><div><small>{slides[slide].category}</small><strong>{slides[slide].note}</strong></div><a href={slides[slide].href} aria-label={slides[slide].imageLabel + " ürünlerini incele"}>↗</a></div>
+            </div>
           </div>
           <div className="container hero-bottom"><div className="slide-dots" aria-label="Slayt seçimi">{slides.map((s, i) => <button type="button" key={s.tag} className={slide === i ? "active" : ""} aria-label={`${i+1}. slayt`} onClick={() => setSlide(i)}/>)}</div><span>GÜNEŞ METAL / {String(slide + 1).padStart(2,"0")}</span></div>
         </section>
