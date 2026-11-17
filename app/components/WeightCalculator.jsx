@@ -19,11 +19,12 @@ pirinc:[["Pirinç (genel)",8.50]],
 "kursun-cinko":[["Kurşun",11.34],["Çinko",7.14]]
 };
 const fmt=n=>new Intl.NumberFormat("tr-TR",{maximumFractionDigits:3}).format(n);
-export default function WeightCalculator({slug,productName}){
+export default function WeightCalculator({slug,productName,initialVariant}){
 const defaults=materials[slug]||materials.bakir;
 const options=variants[slug]||[[defaults.name,defaults.density]];
-const [variant,setVariant]=useState(options[0][0]);
-const [density,setDensity]=useState(String(options[0][1]));
+const selected=options.find(v=>v[0]===initialVariant)||options[0];
+const [variant,setVariant]=useState(selected[0]);
+const [density,setDensity]=useState(String(selected[1]));
 const [unit,setUnit]=useState("mm");
 const chooseVariant=name=>{setVariant(name);const found=options.find(v=>v[0]===name);if(found)setDensity(String(found[1]));};
 const [shape,setShape]=useState("round");
