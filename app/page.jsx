@@ -4,20 +4,22 @@ import { useEffect, useState } from "react";
 
 import { products } from "./products";
 const slides = [
-  { tag: "1988'DEN BUGÜNE", title: "Metalde güvenilir çözüm ortağınız", detail: "Bakır, bronz, alüminyum ve pirinç ürünlerinde geniş seçenekler. Endüstriyel ihtiyaçlarınız için Güneş Metal yanınızda.", label: "Ürünleri Keşfet", href: "#urunler", image: products.find(p => p.slug === "bakir")?.image, imageLabel: "Bakır ürünleri", category: "METAL ÜRÜNLERİ", note: "Bakır · Bronz · Pirinç · Alüminyum" },
-  { tag: "GENİŞ ÜRÜN YELPAZESİ", title: "Sanayiye özel metal çözümleri", detail: "Farklı alaşım ve ürün formlarını inceleyin, ölçülerinize uygun malzemeyi kolayca bulun.", label: "Metalleri İncele", href: "#urunler", image: products.find(p => p.slug === "bronz")?.image, imageLabel: "Bronz ürünleri", category: "ENDÜSTRİYEL METALLER", note: "Kaliteye göre ürün ve ağırlık hesaplama" },
-  { tag: "MÜHENDİSLİK ÇÖZÜMLERİ", title: "Teknik plastiklerde doğru malzeme", detail: "Delrin, Kestamid, Teflon ve polietilen seçenekleriyle projeleriniz için teknik malzeme alternatifleri.", label: "Plastikleri İncele", href: "/urunler/muhendislik-plastik", image: products.find(p => p.slug === "muhendislik-plastik")?.image, imageLabel: "Mühendislik plastikleri", category: "MÜHENDİSLİK PLASTİKLERİ", note: "Yuvarlak çubuk · Levha" },
+  { tag: "1988'DEN BUGÜNE", title: "Sanayinin gücü, malzemenin kalitesi.", detail: "Bakır, bronz, alüminyum ve pirinç ürünlerinde geniş seçenekler. Endüstriyel ihtiyaçlarınız için Güneş Metal yanınızda.", label: "Ürünleri Keşfet", href: "#urunler", image: products.find(p => p.slug === "bakir")?.image, imageLabel: "Bakır ürünleri", category: "METAL ÜRÜNLERİ", note: "Bakır · Bronz · Pirinç · Alüminyum" },
+  { tag: "GENİŞ ÜRÜN YELPAZESİ", title: "Her projeye uygun metal çözümleri.", detail: "Farklı alaşım ve ürün formlarını inceleyin, ölçülerinize uygun malzemeyi kolayca bulun.", label: "Metalleri İncele", href: "#urunler", image: products.find(p => p.slug === "bronz")?.image, imageLabel: "Bronz ürünleri", category: "ENDÜSTRİYEL METALLER", note: "Kaliteye göre ürün ve ağırlık hesaplama" },
+  { tag: "MÜHENDİSLİK ÇÖZÜMLERİ", title: "Mühendislik plastiklerinde doğru tercih.", detail: "Delrin, Kestamid, Teflon ve polietilen seçenekleriyle projeleriniz için teknik malzeme alternatifleri.", label: "Plastikleri İncele", href: "/urunler/muhendislik-plastik", image: products.find(p => p.slug === "muhendislik-plastik")?.image, imageLabel: "Mühendislik plastikleri", category: "MÜHENDİSLİK PLASTİKLERİ", note: "Yuvarlak çubuk · Levha" },
 ];
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 6000);
+    if (paused) return;
+    const id = setInterval(() => setSlide((s) => (s + 1) % slides.length), 7500);
     return () => clearInterval(id);
-  }, []);
+  }, [paused]);
 
   const visible = products.filter((p) =>
     `${p.name} ${p.desc}`.toLocaleLowerCase("tr-TR").includes(search.toLocaleLowerCase("tr-TR"))
@@ -49,8 +51,8 @@ export default function Home() {
       </header>
 
       <main id="anasayfa">
-        <section className="hero" aria-label="Tanıtım">
-          <div className="hero-decor hero-decor-one"/><div className="hero-decor hero-decor-two"/>
+        <section className="hero premium-hero" aria-label="Tanıtım" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false); }}>
+          <div className="hero-decor hero-decor-one"/><div className="hero-decor hero-decor-two"/><div className="hero-grid-lines" aria-hidden="true"/>
           <div className="container hero-inner">
             <div className="hero-content" key={slide}>
               <span className="eyebrow"><i/> {slides[slide].tag}</span>
@@ -61,12 +63,14 @@ export default function Home() {
             </div>
             <div className="hero-showcase" key={slides[slide].imageLabel}>
               <div className="hero-showcase-top"><span className="hero-showcase-kicker">GÜNEŞ METAL / ÜRÜN VİTRİNİ</span><span className="hero-showcase-number">0{slide + 1} / 0{slides.length}</span></div>
-              <div className="hero-showcase-image"><img src={slides[slide].image} alt={slides[slide].imageLabel} fetchPriority={slide === 0 ? "high" : "auto"} /></div>
+              <div className="hero-showcase-image"><div className="hero-showcase-halo" aria-hidden="true"/><img src={slides[slide].image} alt={slides[slide].imageLabel} fetchPriority={slide === 0 ? "high" : "auto"} /></div>
               <div className="hero-showcase-caption"><div><small>{slides[slide].category}</small><strong>{slides[slide].note}</strong></div><a href={slides[slide].href} aria-label={slides[slide].imageLabel + " ürünlerini incele"}>↗</a></div>
             </div>
           </div>
-          <div className="container hero-bottom"><div className="slide-dots" aria-label="Slayt seçimi">{slides.map((s, i) => <button type="button" key={s.tag} className={slide === i ? "active" : ""} aria-label={`${i+1}. slayt`} onClick={() => setSlide(i)}/>)}</div><span>GÜNEŞ METAL / {String(slide + 1).padStart(2,"0")}</span></div>
+          <div className="container hero-bottom"><div className="slide-dots" aria-label="Slayt seçimi">{slides.map((s, i) => <button type="button" key={s.tag} className={slide === i ? "active" : ""} aria-current={slide === i ? "true" : undefined} aria-label={`${i+1}. slayt`} onClick={() => setSlide(i)}/>)}</div><div className="hero-bottom-right"><span>GÜNEŞ METAL / {String(slide + 1).padStart(2,"0")}</span><button className="hero-slide-control" type="button" aria-label={paused ? "Slaytları oynat" : "Slaytları duraklat"} onClick={() => setPaused(v => !v)}>{paused ? "▶" : "Ⅱ"}</button></div></div>
         </section>
+
+        <section className="home-category-strip" aria-label="Popüler ürün kategorileri"><div className="container home-category-inner"><div className="home-category-intro"><small>MALZEMELERİ KEŞFEDİN</small><strong>Aradığınız ürün bir tık uzağınızda.</strong></div><div className="home-category-links">{["bakir","bronz","aluminyum","pirinc","muhendislik-plastik"].map(slug => { const product = products.find(p => p.slug === slug); return <a key={slug} href={`/urunler/${slug}`}>{product?.name}<span aria-hidden="true">↗</span></a>; })}</div></div></section>
 
         <section className="features" id="hizmetler"><div className="container feature-grid">
           <div><span className="feature-icon">◇</span><strong>Kaliteli Ürün</strong><p>Metal ve plastik malzeme çeşitleri</p></div>
@@ -77,7 +81,7 @@ export default function Home() {
 
         <section className="section products-section" id="urunler"><div className="container">
           <div className="section-top"><div><span className="section-kicker">ÜRÜN KATALOĞU</span><h2>Ürün gruplarımız</h2><p>İhtiyacınız olan malzemeyi kolayca bulun.</p></div><label className="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Ürün veya malzeme ara..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Ürün ara" /></label></div>
-          <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><a className="product-art photo-art" href={`/urunler/${p.slug}`}><img src={p.image} alt={`${p.name} ürün görseli`} loading="lazy" /></a><div className="product-body"><h3>{p.name}</h3><p>{p.desc}</p><a href={`/urunler/${p.slug}`}>Ürünleri İncele <span>↗</span></a></div></article>)}</div>
+          <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><a className="product-art photo-art" aria-label={`${p.name} kategorisini incele`} href={`/urunler/${p.slug}`}><img src={p.image} alt={`${p.name} ürün görseli`} loading="lazy" decoding="async" /></a><div className="product-body"><h3>{p.name}</h3><p>{p.desc}</p><a href={`/urunler/${p.slug}`}>Ürünleri İncele <span>↗</span></a></div></article>)}</div>
           {visible.length === 0 && <p className="empty-results">Aramanıza uygun ürün bulunamadı. Başka bir kelime deneyin.</p>}
         </div></section>
 
