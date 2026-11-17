@@ -97,8 +97,8 @@ export default function Home() {
             </div>
             <div className="locations-grid">
               {[
-                { name: "Güneş Metal Tuzla", district: "TUZLA / İSTANBUL", address: "Evliya Çelebi Mahallesi, Ümmet Sokak No:19, 34944 Tuzla / İstanbul", lat: 40.843751, lng: 29.294404 },
-                { name: "Güneş Metal İkitelli", district: "BAŞAKŞEHİR / İSTANBUL", address: "Ziya Gökalp Mahallesi, Demirciler Sanayi Sitesi, İkitelli OSB, B8 Blok No:188, 34490 Başakşehir / İstanbul", lat: 41.0687003, lng: 28.8055369 }
+                { name: "Güneş Metal Tuzla", district: "TUZLA / İSTANBUL", address: "Evliya Çelebi Mahallesi, Ümmet Sokak No:19, 34944 Tuzla / İstanbul", lat: 40.843751, lng: 29.294404, whatsapp: "905330186924", phone: "+90 533 018 69 24" },
+                { name: "Güneş Metal İkitelli", district: "BAŞAKŞEHİR / İSTANBUL", address: "Ziya Gökalp Mahallesi, Demirciler Sanayi Sitesi, İkitelli OSB, B8 Blok No:188, 34490 Başakşehir / İstanbul", lat: 41.0687003, lng: 28.8055369, whatsapp: "905395986558", phone: "+90 539 598 65 58" }
               ].map((location) => (
                 <article className="location-card" key={location.name}>
                   <div className="location-map">
@@ -114,7 +114,10 @@ export default function Home() {
                     <span className="location-district">{location.district}</span>
                     <h3>{location.name}</h3>
                     <p>{location.address}</p>
-                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${location.lat}%2C${location.lng}`} target="_blank" rel="noopener noreferrer" aria-label={location.name + " için Google Haritalar yol tarifi al"}>Yol Tarifi Al <span aria-hidden="true">↗</span></a>
+                    <div className="location-actions">
+                      <a className="location-directions" href={`https://www.google.com/maps/dir/?api=1&destination=${location.lat}%2C${location.lng}`} target="_blank" rel="noopener noreferrer" aria-label={location.name + " için Google Haritalar yol tarifi al"}>Yol Tarifi Al <span aria-hidden="true">↗</span></a>
+                      <a className="location-whatsapp" href={`https://wa.me/${location.whatsapp}?text=${encodeURIComponent("Merhaba, Güneş Metal'den ürün hakkında bilgi almak istiyorum.")}`} target="_blank" rel="noopener noreferrer" aria-label={location.name + " WhatsApp hattına mesaj gönder"}>WhatsApp <span>{location.phone}</span></a>
+                    </div>
                   </div>
                 </article>
               ))}
