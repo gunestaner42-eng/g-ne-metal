@@ -13,7 +13,9 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [slide, setSlide] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [manualPaused, setManualPaused] = useState(false);
+  const [hoverPaused, setHoverPaused] = useState(false);
+  const paused = manualPaused || hoverPaused;
 
   useEffect(() => {
     if (paused) return;
@@ -44,14 +46,14 @@ export default function Home() {
             <a onClick={closeMenu} href="#urunler">Ürünlerimiz</a>
             <a onClick={closeMenu} href="#hizmetler">Hizmet Alanları</a>
             <a onClick={closeMenu} href="#hakkimizda">Hakkımızda</a>
-            <a onClick={closeMenu} href="#iletisim">İletişim</a>
-            <a className="nav-cta" onClick={closeMenu} href="mailto:info@gunesgroup.com.tr?subject=Urun%20Teklif%20Talebi">Teklif Al ↗</a>
+            <a onClick={closeMenu} href="#magazalarimiz">Mağazalarımız</a><a onClick={closeMenu} href="#iletisim">İletişim</a>
+            <a className="nav-cta" onClick={closeMenu} href="#iletisim">Teklif Al ↗</a>
           </nav>
         </div>
       </header>
 
       <main id="anasayfa">
-        <section className="hero premium-hero" aria-label="Tanıtım" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocusCapture={() => setPaused(true)} onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false); }}>
+        <section className="hero premium-hero" aria-label="Tanıtım" onMouseEnter={() => setHoverPaused(true)} onMouseLeave={() => setHoverPaused(false)} onFocusCapture={() => setHoverPaused(true)} onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget)) setHoverPaused(false); }}>
           <div className="hero-decor hero-decor-one"/><div className="hero-decor hero-decor-two"/><div className="hero-grid-lines" aria-hidden="true"/>
           <div className="container hero-inner">
             <div className="hero-content" key={slide}>
@@ -59,7 +61,7 @@ export default function Home() {
               <h1>{slides[slide].title}</h1>
               <p>{slides[slide].detail}</p>
               <div className="hero-actions"><a className="button primary" href={slides[slide].href}>{slides[slide].label} <span>↗</span></a><a className="button outline" href="#iletisim">Teklif Al ↗</a></div>
-              <div className="hero-trust"><span><strong>1988</strong> Kuruluş</span><span><strong>Metal & Plastik</strong> Ürün grupları</span></div>
+              <div className="hero-trust"><span><strong>1988</strong> Kuruluş</span><span><strong>8 Ürün Grubu</strong> Endüstriyel malzeme</span><span><strong>2 Şube</strong> İstanbul</span></div>
             </div>
             <div className="hero-showcase" key={slides[slide].imageLabel}>
               <div className="hero-showcase-top"><span className="hero-showcase-kicker">GÜNEŞ METAL / ÜRÜN VİTRİNİ</span><span className="hero-showcase-number">0{slide + 1} / 0{slides.length}</span></div>
@@ -67,7 +69,7 @@ export default function Home() {
               <div className="hero-showcase-caption"><div><small>{slides[slide].category}</small><strong>{slides[slide].note}</strong></div><a href={slides[slide].href} aria-label={slides[slide].imageLabel + " ürünlerini incele"}>↗</a></div>
             </div>
           </div>
-          <div className="container hero-bottom"><div className="slide-dots" aria-label="Slayt seçimi">{slides.map((s, i) => <button type="button" key={s.tag} className={slide === i ? "active" : ""} aria-current={slide === i ? "true" : undefined} aria-label={`${i+1}. slayt`} onClick={() => setSlide(i)}/>)}</div><div className="hero-bottom-right"><span>GÜNEŞ METAL / {String(slide + 1).padStart(2,"0")}</span><button className="hero-slide-control" type="button" aria-label={paused ? "Slaytları oynat" : "Slaytları duraklat"} onClick={() => setPaused(v => !v)}>{paused ? "▶" : "Ⅱ"}</button></div></div>
+          <div className="container hero-bottom"><div className="slide-dots" aria-label="Slayt seçimi">{slides.map((s, i) => <button type="button" key={s.tag} className={slide === i ? "active" : ""} aria-current={slide === i ? "true" : undefined} aria-label={`${i+1}. slayt`} onClick={() => setSlide(i)}/>)}</div><div className="hero-bottom-right"><span>GÜNEŞ METAL / {String(slide + 1).padStart(2,"0")}</span><button className="hero-slide-control" type="button" aria-label={manualPaused ? "Slaytları oynat" : "Slaytları duraklat"} onClick={() => setManualPaused(v => !v)}>{manualPaused ? "▶" : "Ⅱ"}</button></div></div>
         </section>
 
         <section className="home-category-strip" aria-label="Popüler ürün kategorileri"><div className="container home-category-inner"><div className="home-category-intro"><small>MALZEMELERİ KEŞFEDİN</small><strong>Aradığınız ürün bir tık uzağınızda.</strong></div><div className="home-category-links">{["bakir","bronz","aluminyum","pirinc","muhendislik-plastik"].map(slug => { const product = products.find(p => p.slug === slug); return <a key={slug} href={`/urunler/${slug}`}>{product?.name}<span aria-hidden="true">↗</span></a>; })}</div></div></section>
@@ -81,9 +83,11 @@ export default function Home() {
 
         <section className="section products-section" id="urunler"><div className="container">
           <div className="section-top"><div><span className="section-kicker">ÜRÜN KATALOĞU</span><h2>Ürün gruplarımız</h2><p>İhtiyacınız olan malzemeyi kolayca bulun.</p></div><label className="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Ürün veya malzeme ara..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Ürün ara" /></label></div>
-          <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><a className="product-art photo-art" aria-label={`${p.name} kategorisini incele`} href={`/urunler/${p.slug}`}><img src={p.image} alt={`${p.name} ürün görseli`} loading="lazy" decoding="async" /></a><div className="product-body"><h3>{p.name}</h3><p>{p.desc}</p><a href={`/urunler/${p.slug}`}>Ürünleri İncele <span>↗</span></a></div></article>)}</div>
+          <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><a className="product-art photo-art" aria-label={`${p.name} kategorisini incele`} href={`/urunler/${p.slug}`}><img src={p.image} alt={`${p.name} ürün görseli`} loading="lazy" decoding="async" /></a><div className="product-body"><span className="product-overline">GÜNEŞ METAL / ÜRÜNLER</span><h3>{p.name}</h3><p>{p.desc}</p><a href={`/urunler/${p.slug}`}>Ürünleri İncele <span>↗</span></a></div></article>)}</div>
           {visible.length === 0 && <p className="empty-results">Aramanıza uygun ürün bulunamadı. Başka bir kelime deneyin.</p>}
         </div></section>
+
+        <section className="process-section" aria-labelledby="process-title"><div className="container"><div className="process-header"><div><span className="section-kicker">NASIL ÇALIŞIYORUZ?</span><h2 id="process-title">İhtiyacınızdan doğru malzemeye.</h2></div><p>Malzeme seçimi, teorik ağırlık hesabı ve şubeye özel teklif talebini tek akışta tamamlayın.</p></div><div className="process-grid"><div><span>01 / KEŞFET</span><h3>Malzemeyi seçin</h3><p>Bakırdan mühendislik plastiklerine ürün gruplarını ve alaşım seçeneklerini inceleyin.</p></div><div><span>02 / HESAPLA</span><h3>Ölçülerinizi girin</h3><p>Ürün şekline ve malzeme kalitesine göre tahmini kilogram hesabı yapın.</p></div><div><span>03 / TEKLİF AL</span><h3>Şubenizi belirleyin</h3><p>Tuzla veya İkitelli şubesine ölçülerinizi içeren teklif e-postasını hazırlayın.</p></div></div><a className="process-link" href="#urunler">Ürün kataloğuna git <span>↗</span></a></div></section>
 
         <section className="about-section" id="hakkimizda"><div className="container about-grid"><div className="about-mark"><span>1988</span><small>KURULUŞ</small></div><div><span className="section-kicker">GÜNEŞ METAL HAKKINDA</span><h2>Tecrübemizle yanınızdayız.</h2><p>1988 yılından bu yana metal sektöründe faaliyet gösteren Güneş Metal, mühendislik plastiklerini de ürün yelpazesine ekleyerek müşterilerine geniş malzeme seçenekleri sunmaktadır.</p><p>Teknik bilgi desteği, güvenilir hizmet ve hızlı dağıtım anlayışıyla çalışıyoruz.</p><a className="text-link" href="#iletisim">Bizimle İletişime Geçin ↗</a></div></div></section>
 
