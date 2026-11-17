@@ -2,17 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const products = [
-  { name: "Bakır", desc: "Lama, çubuk, boru, levha ve tel", icon: "Cu", tone: "copper" },
-  { name: "Alüminyum", desc: "Levha, çubuk ve endüstriyel ürünler", icon: "Al", tone: "silver" },
-  { name: "Bronz", desc: "Bronz çubuk, burç ve döküm çeşitleri", icon: "Br", tone: "bronze" },
-  { name: "Pirinç", desc: "Profil, boru ve özel pirinç ürünleri", icon: "Zn", tone: "brass" },
-  { name: "Mühendislik Plastik", desc: "Endüstriyel plastik malzeme çeşitleri", icon: "PE", tone: "plastic" },
-  { name: "Özel Bakır Ürünler", desc: "Yivli ve bakır-nikel boru çeşitleri", icon: "Cu", tone: "copper" },
-  { name: "Kaynak Telleri", desc: "Sarı, bakır ve gümüş kaynak telleri", icon: "Ag", tone: "silver" },
-  { name: "Kurşun ve Çinko", desc: "Kurşun levha ve çinko levha", icon: "Zn", tone: "slate" },
-];
-
+import { products } from "./products";
 const slides = [
   { tag: "1988'DEN BUGÜNE", title: "Metalde güvenilir çözüm ortağınız", detail: "Bakır, bronz, alüminyum ve pirinç ürünlerinde geniş seçenekler.", label: "Ürünleri Keşfet", href: "#urunler" },
   { tag: "TEKNİK ÇÖZÜMLER", title: "Mühendislik plastikleri", detail: "Endüstriyel ihtiyaçlarınız için farklı malzeme alternatifleri.", label: "Ürünleri İncele", href: "#urunler" },
@@ -82,7 +72,7 @@ export default function Home() {
 
         <section className="section products-section" id="urunler"><div className="container">
           <div className="section-top"><div><span className="section-kicker">ÜRÜN KATALOĞU</span><h2>Ürün gruplarımız</h2><p>İhtiyacınız olan malzemeyi kolayca bulun.</p></div><label className="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Ürün veya malzeme ara..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Ürün ara" /></label></div>
-          <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><div className={`product-art ${p.tone}`}><span className="art-glow"/><span className="art-symbol">{p.icon}</span><span className="art-lines"/></div><div className="product-body"><h3>{p.name}</h3><p>{p.desc}</p><a href={`mailto:info@gunesgroup.com.tr?subject=${encodeURIComponent(p.name + " hakkında teklif talebi")}`}>Teklif İste <span>↗</span></a></div></article>)}</div>
+          <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><a className="product-art photo-art" href={`/urunler/${p.slug}`}><img src={p.image} alt={`${p.name} ürün görseli`} loading="lazy" /></a><div className="product-body"><h3>{p.name}</h3><p>{p.desc}</p><a href={`/urunler/${p.slug}`}>Ürünleri İncele <span>↗</span></a></div></article>)}</div>
           {visible.length === 0 && <p className="empty-results">Aramanıza uygun ürün bulunamadı. Başka bir kelime deneyin.</p>}
         </div></section>
 
