@@ -88,6 +88,39 @@ export default function Home() {
         <section className="about-section" id="hakkimizda"><div className="container about-grid"><div className="about-mark"><span>1988</span><small>KURULUŞ</small></div><div><span className="section-kicker">GÜNEŞ METAL HAKKINDA</span><h2>Tecrübemizle yanınızdayız.</h2><p>1988 yılından bu yana metal sektöründe faaliyet gösteren Güneş Metal, mühendislik plastiklerini de ürün yelpazesine ekleyerek müşterilerine geniş malzeme seçenekleri sunmaktadır.</p><p>Teknik bilgi desteği, güvenilir hizmet ve hızlı dağıtım anlayışıyla çalışıyoruz.</p><a className="text-link" href="#iletisim">Bizimle İletişime Geçin ↗</a></div></div></section>
 
         <section className="contact-section" id="iletisim"><div className="container contact-grid"><div><span className="section-kicker">İLETİŞİM</span><h2>Projeniz için doğru malzemeyi birlikte bulalım.</h2><p>Ölçü, adet ve ürün detaylarını paylaşarak teklif isteyebilirsiniz.</p></div><div className="contact-actions"><a className="button primary" href="mailto:info@gunesgroup.com.tr?subject=Urun%20Teklif%20Talebi">E-posta ile Teklif Al ↗</a><a className="button outline" href="tel:+902126713324">0212 671 33 24</a></div></div></section>
+        <section className="locations-section" id="magazalarimiz" aria-labelledby="locations-title">
+          <div className="container">
+            <div className="locations-heading">
+              <span className="section-kicker">BİZE ULAŞIN</span>
+              <h2 id="locations-title">Mağazalarımız</h2>
+              <p>Tuzla ve İkitelli şubelerimizin adreslerini inceleyebilir, tek tıkla yol tarifi alabilirsiniz.</p>
+            </div>
+            <div className="locations-grid">
+              {[
+                { name: "Güneş Metal Tuzla", district: "TUZLA / İSTANBUL", address: "Evliya Çelebi Mahallesi, Ümmet Sokak No:19, 34944 Tuzla / İstanbul", lat: 40.843751, lng: 29.294404 },
+                { name: "Güneş Metal İkitelli", district: "BAŞAKŞEHİR / İSTANBUL", address: "Ziya Gökalp Mahallesi, Demirciler Sanayi Sitesi, İkitelli OSB, B8 Blok No:188, 34490 Başakşehir / İstanbul", lat: 41.0687003, lng: 28.8055369 }
+              ].map((location) => (
+                <article className="location-card" key={location.name}>
+                  <div className="location-map">
+                    <iframe
+                      title={location.name + " harita konumu"}
+                      src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=16&output=embed`}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="location-details">
+                    <span className="location-district">{location.district}</span>
+                    <h3>{location.name}</h3>
+                    <p>{location.address}</p>
+                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${location.lat}%2C${location.lng}`} target="_blank" rel="noopener noreferrer" aria-label={location.name + " için Google Haritalar yol tarifi al"}>Yol Tarifi Al <span aria-hidden="true">↗</span></a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
       <footer className="footer"><div className="container footer-inner"><a className="footer-brand" href="#anasayfa">GÜNEŞ <strong>METAL</strong></a><span>© {new Date().getFullYear()} Güneş Metal. Tüm hakları saklıdır.</span><a href="mailto:info@gunesgroup.com.tr">info@gunesgroup.com.tr</a></div></footer>
     </>
