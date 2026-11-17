@@ -84,3 +84,10 @@
 .location-details a:hover{background:#bd252e}
 .location-details a:focus-visible{outline:3px solid #172434;outline-offset:3px}
 @media(max-width:760px){.locations-section{padding:60px 0}.locations-grid{grid-template-columns:1fr;gap:18px}.location-map{height:240px}.location-details{padding:22px}.location-details p{min-height:0}}
+
+/* Şubelere özel WhatsApp iletişim butonları */
+.location-actions{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.location-details .location-whatsapp{background:#17834c;gap:9px}
+.location-details .location-whatsapp:hover{background:#106b3c}
+.location-whatsapp span{font-size:12px;font-weight:700;white-space:nowrap}
+@media(max-width:480px){.location-actions{flex-direction:column}.location-actions a{justify-content:center}}
