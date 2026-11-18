@@ -340,3 +340,5 @@ body{background:var(--soft)}
 .admin-weight-info{display:grid;gap:5px;padding:12px;border-radius:8px;background:#F0E9D9;border:1px solid #DDCAA4}.admin-weight-info strong{font-size:13px;color:#584321}.admin-weight-info small{font-size:11px;color:#776D5D}.admin-pricing-line>.admin-pricing-fields{margin-top:3px}
 
 .admin-pricing-send .admin-pdf-btn{background:#BBA06B;color:#1C1B18;border:1px solid #9B7C45;border-radius:8px;padding:11px 14px;font-size:12px;font-weight:800;cursor:pointer}.admin-pricing-send .admin-pdf-btn:hover{background:#d2b77c}
+
+.admin-login .admin-remember{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;cursor:pointer}.admin-login .admin-remember input{width:17px;height:17px;accent-color:#BBA06B;flex-shrink:0}
