@@ -32,7 +32,7 @@ export async function POST(request){
  if(!verify?.ok)return fail("Güvenlik doğrulaması şu anda kullanılamıyor.",503);
  const result=await verify.json().catch(()=>({success:false}));
  if(!result.success)return fail("Güvenlik doğrulaması başarısız. Yeniden deneyin.",403);
- const fingerprint=createHash("sha256").update(JSON.stringify({branch,company:company.trim(),contact:contact.trim(),items:sanitized})).digest("hex");
+ const fingerprint=createHash("sha256").update(JSON.stringify({branch,company:company.trim(),contact:contact.trim(),items:sanitized,window:Math.floor(Date.now()/600000)})).digest("hex");
  // Duplicate requests in a short window can be checked in DB with a unique request fingerprint.
  const response=await fetch(url+"/rest/v1/quote_requests",{method:"POST",headers:{apikey:secret,Authorization:"Bearer "+secret,"Content-Type":"application/json",Prefer:"return=representation"},body:JSON.stringify({branch,company:company.trim(),contact:contact.trim(),items:sanitized,request_fingerprint:fingerprint}),cache:"no-store"}).catch(()=>null);
  if(!response)return fail("Kayıt servisine ulaşılamadı.",503);
