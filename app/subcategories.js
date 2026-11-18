@@ -15,9 +15,9 @@ export const subcategories={
   {slug:"burc",name:"Bronz Burç",detail:"Dış ve iç çap ile teorik ağırlık hesabı.",mode:"tube",variant:"Bronz (genel)"}
  ],
  pirinc:[
-  {slug:"profil",name:"Pirinç Profil",detail:"Profilin kesitine göre teorik ağırlık hesabı.",variant:"Pirinç (genel)"},
+  {slug:"profil",name:"Pirinç Profil",detail:"Profil kesitine ve ölçülere göre bilgi almak için şubelerimizle iletişime geçin.",calculator:false,variant:"Pirinç (genel)"},
   {slug:"boru",name:"Pirinç Boru",detail:"Dış ve iç çap ile teorik ağırlık hesabı.",mode:"tube",variant:"Pirinç (genel)"},
-  {slug:"ozel-imalat",name:"Pirinç Özel İmalat",detail:"Özel ölçü ve kesit için şubelerimizden bilgi alın.",variant:"Pirinç (genel)"}
+  {slug:"ozel-imalat",name:"Pirinç Özel İmalat",detail:"Özel ölçü ve kesit için şubelerimizden bilgi alın.",calculator:false,variant:"Pirinç (genel)"}
  ],
  "muhendislik-plastik":[
   {slug:"delrin-pom",name:"Delrin / POM",detail:"POM mühendislik plastiği için teorik ağırlık hesabı.",variant:"Delrin / POM"},
