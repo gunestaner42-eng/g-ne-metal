@@ -284,3 +284,6 @@ body{background:var(--soft)}
 .premium-hero .hero-showcase-image img{object-fit:contain;filter:none;mix-blend-mode:normal}
 @media(max-width:760px){.products-section .product-art.photo-art{margin:9px 9px 0;padding:10px}.product-body{padding:16px}.detail-photo{padding:16px}.detail-photo img{max-height:270px}}
 @media(prefers-reduced-motion:reduce){.products-section .product-art.photo-art img,.product-card{transition:none}}
+
+/* Dinamik teknik ölçü şeması */
+.weight-diagram{grid-column:1/-1;min-width:0;border:1px solid #D8C9A8;border-radius:12px;padding:18px;background:#FAF8F3}.weight-diagram-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.weight-diagram-title strong{color:#1C1B18;font-size:16px}.weight-diagram-title small{color:#765B2C;font-size:10px;font-weight:800;letter-spacing:1px}.weight-diagram svg{display:block;width:100%;max-width:440px;height:auto;margin:8px auto}.weight-diagram p{color:#69645B;font-size:12px;line-height:1.5;margin:0}.weight-diagram-title strong{letter-spacing:0}@media(max-width:480px){.weight-diagram{padding:12px}}
