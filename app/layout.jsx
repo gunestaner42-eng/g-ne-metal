@@ -1,4 +1,5 @@
 import "./globals.css";
+import WhatsAppWidget from "./components/WhatsAppWidget";
 
 export const metadata = {
  metadataBase: new URL("https://gunes-metal.vercel.app"),
@@ -11,5 +12,5 @@ export const metadata = {
 };
 export default function RootLayout({children}) {
  const organization={"@context":"https://schema.org","@type":"Organization",name:"Güneş Metal",url:"https://gunes-metal.vercel.app",logo:"https://gunes-metal.vercel.app/gunes-metal-logo.svg",email:"info@gunesgroup.com.tr",contactPoint:[{"@type":"ContactPoint",telephone:"+90 216 394 92 48",contactType:"sales",areaServed:"TR",availableLanguage:"Turkish"},{"@type":"ContactPoint",telephone:"+90 212 671 33 20",contactType:"sales",areaServed:"TR",availableLanguage:"Turkish"}]};
- return <html lang="tr"><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organization).replace(/</g,"\\u003c")}}/>{children}</body></html>;
+ return <html lang="tr"><body><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organization).replace(/</g,"\\u003c")}}/>{children}<WhatsAppWidget/></body></html>;
 }
