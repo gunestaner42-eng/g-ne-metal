@@ -54,7 +54,7 @@ export default function Home() {
             <a onClick={closeMenu} href="#urunler">Ürünlerimiz</a>
             <a onClick={closeMenu} href="#hizmetler">Hizmet Alanları</a>
             <a onClick={closeMenu} href="#hakkimizda">Hakkımızda</a>
-            <a onClick={closeMenu} href="#magazalarimiz">Mağazalarımız</a><a onClick={closeMenu} href="#iletisim">İletişim</a>
+            <a onClick={closeMenu} href="#magazalarimiz">Mağazalarımız</a><a onClick={closeMenu} href="#iletisim">İletişim</a><Link onClick={closeMenu} href="/admin" aria-label="Yönetim paneline git">Yönetici Girişi</Link>
             <Link className="nav-cta" onClick={closeMenu} href="/teklif-sepeti">Teklif Sepeti ↗</Link>
           </nav>
         </div>
