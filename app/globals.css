@@ -247,3 +247,6 @@ body{background:#E9EDF1;color:#171B21}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#A32E40}
 .location-details .location-whatsapp{background:#17834c;color:#FFFFFF}
 .location-details .location-whatsapp:hover{background:#106b3c}
+
+/* Orijinal firma logosu: tüm sayfalarda ve mobil menüde */
+.brand,.footer-brand{display:block;flex-shrink:0;width:140px;height:82px;background:#fff url('/gunes-metal-logo.svg') center/contain no-repeat;font-size:0!important;color:transparent!important;border-radius:5px}.brand strong,.brand small,.footer-brand strong{font-size:0!important;color:transparent!important}.brand small{margin:0}.footer-brand{width:145px;height:100px}.header-inner{min-height:94px}@media(max-width:760px){.brand{width:114px;height:72px}.header-inner{min-height:80px}}
