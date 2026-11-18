@@ -59,7 +59,7 @@ const [quantity,setQuantity]=useState("1");
 const [offerOpen,setOfferOpen]=useState(false);
 const calculation=useMemo(()=>calculateWeight({shape,diameter,inner,width,thickness,length,quantity,density,unit,copperMode}),[shape,diameter,inner,width,thickness,length,quantity,density,unit,copperMode]);
 const result=calculation.kg;
-const input=(label,value,setter)=><label className="weight-field"><span>{label}</span><input type="number" inputMode="decimal" min="0" step={label.includes("Adet")?"1":"any"} value={value} onChange={e=>setter(e.target.value)} aria-invalid={result===null} /></label>;
+const input=(label,value,setter)=><label className="weight-field"><span>{label}</span><input type="number" inputMode="decimal" min="0" step={label.includes("Adet")?"1":"any"} value={value} onChange={e=>setter(e.target.value)} /></label>;
 const mailSubject=encodeURIComponent(productName+" ağırlık ve fiyat teklifi");
 const mailBody=encodeURIComponent("Ürün: "+productName+"\nMalzeme kalitesi: "+variant+"\nŞekil: "+(copperMode==="coil"?"Kangal bakır boru":({round:"Yuvarlak çubuk",tube:"Boru",flat:slug==="muhendislik-plastik"?"Levha":"Lama / levha",hex:"Altıköşe"}[shape]))+"\nYoğunluk: "+density+" g/cm³\nÇap: "+diameter+" mm\nİç çap: "+inner+" mm\nEn: "+width+" mm\nKalınlık: "+thickness+" mm\nBoy: "+length+" "+unit+"\nAdet: "+quantity+"\nTahmini ağırlık: "+(result===null?"Hesaplanamadı":fmt(result)+" kg")+"\n\nFiyat ve stok bilgisi rica ederim.");
 const offerMail=(address)=>"mailto:"+address+"?subject="+mailSubject+"&body="+mailBody;
