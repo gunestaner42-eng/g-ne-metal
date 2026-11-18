@@ -297,3 +297,5 @@ body{background:var(--soft)}
 @media(max-width:360px){.weight-fields{grid-template-columns:1fr}.brand{max-width:105px}.detail-back{font-size:12px}}
 @media(hover:none){.button:hover,.product-card:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+.weight-whatsapp{display:grid;gap:9px;margin:20px 0 14px}.weight-whatsapp>span{font-size:13px;color:#F3F1EB;font-weight:600}.weight-whatsapp a{display:flex;align-items:center;justify-content:center;min-height:48px;padding:10px 12px;border-radius:8px;background:#16834B;color:#fff;font-size:14px;font-weight:700;text-decoration:none;text-align:center}.weight-whatsapp a:hover{background:#106B3C;color:#fff}.weight-whatsapp a:focus-visible{outline:2px solid #DCC38F;outline-offset:3px}
