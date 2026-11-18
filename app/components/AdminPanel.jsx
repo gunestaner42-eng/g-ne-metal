@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useEffect,useMemo,useState} from "react";
 import QuotePricing from "./QuotePricing";
 const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -20,8 +20,36 @@ function exportCsv(rows){
 }
 export default function AdminPanel(){
  const [pricing,setPricing]=useState(null);
+ const [remember,setRemember]=useState(false),[restoring,setRestoring]=useState(true);
  const [email,setEmail]=useState(""),[password,setPassword]=useState(""),[token,setToken]=useState(""),[profile,setProfile]=useState(null),[quotes,setQuotes]=useState([]),[error,setError]=useState(""),[busy,setBusy]=useState(false),[filter,setFilter]=useState("all"),[statusFilter,setStatusFilter]=useState("all"),[search,setSearch]=useState(""),[tab,setTab]=useState("overview"),[selected,setSelected]=useState(null),[note,setNote]=useState("");
  const configured=Boolean(url&&key);
+ useEffect(()=>{let alive=true;async function restore(){
+  try{
+   const persistent=localStorage.getItem("gm-admin-session");
+   const raw=persistent||sessionStorage.getItem("gm-admin-session");
+   if(!raw)return;
+   const saved=JSON.parse(raw);
+   if(!saved.refresh_token)return;
+   const res=await fetch(url+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:saved.refresh_token})});
+   if(!res.ok)throw Error("Oturum yenilenemedi.");
+   const data=await res.json();
+   const p=await request("staff_profiles?select=role,branch,full_name&id=eq."+encodeURIComponent(data.user.id),data.access_token);
+   if(!p?.length)throw Error("Yetkisiz kullanıcı.");
+   const rows=await request("quote_requests?select=id,branch,company,contact,items,status,internal_note,created_at,deleted_at&order=created_at.desc&limit=200",data.access_token);
+   if(!alive)return;
+   const store=persistent?localStorage:sessionStorage;
+   store.setItem("gm-admin-session",JSON.stringify({refresh_token:data.refresh_token}));
+   setRemember(Boolean(persistent));setToken(data.access_token);setProfile(p[0]);setQuotes(rows);
+  }catch{localStorage.removeItem("gm-admin-session");sessionStorage.removeItem("gm-admin-session");}
+  finally{if(alive)setRestoring(false);}
+ }if(configured)restore();else setRestoring(false);return()=>{alive=false};},[configured]);
+ useEffect(()=>{if(!token)return;const id=setInterval(async()=>{try{
+  const store=localStorage.getItem("gm-admin-session")?localStorage:sessionStorage;
+  const saved=JSON.parse(store.getItem("gm-admin-session")||"null");if(!saved?.refresh_token)return;
+  const res=await fetch(url+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:saved.refresh_token})});
+  if(!res.ok)throw Error("Oturum yenilenemedi.");
+  const data=await res.json();store.setItem("gm-admin-session",JSON.stringify({refresh_token:data.refresh_token}));setToken(data.access_token);
+ }catch{setToken("");setProfile(null);setQuotes([]);localStorage.removeItem("gm-admin-session");sessionStorage.removeItem("gm-admin-session");}},40*60*1000);return()=>clearInterval(id);},[token]);
  const refresh=async t=>setQuotes(await request("quote_requests?select=id,branch,company,contact,items,status,internal_note,created_at,deleted_at&order=created_at.desc&limit=200",t));
  const login=async e=>{e.preventDefault();setBusy(true);setError("");try{
  const res=await fetch(url+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
@@ -29,10 +57,10 @@ export default function AdminPanel(){
  const data=await res.json();const t=data.access_token;
  const p=await request("staff_profiles?select=role,branch,full_name&id=eq."+encodeURIComponent(data.user.id),t);
  if(!p?.length)throw Error("Bu hesaba yönetim paneli yetkisi tanımlanmamış.");
- await refresh(t);setToken(t);setProfile(p[0]);setPassword("");
+ await refresh(t);localStorage.removeItem("gm-admin-session");sessionStorage.removeItem("gm-admin-session");(remember?localStorage:sessionStorage).setItem("gm-admin-session",JSON.stringify({refresh_token:data.refresh_token}));setToken(t);setProfile(p[0]);setPassword("");
  }catch(e){setError(e.message);}finally{setBusy(false);}};
  const update=async (q,patch)=>{setBusy(true);setError("");try{await request("quote_requests?id=eq."+q.id,token,{method:"PATCH",headers:{Prefer:"return=minimal"},body:JSON.stringify(patch)});await refresh(token);setSelected(old=>old?.id===q.id?{...old,...patch}:old);}catch(e){setError(e.message);}finally{setBusy(false);}};
- const logout=()=>{setToken("");setProfile(null);setQuotes([]);setSelected(null);setPassword("");};
+ const logout=()=>{localStorage.removeItem("gm-admin-session");sessionStorage.removeItem("gm-admin-session");setToken("");setProfile(null);setQuotes([]);setSelected(null);setPassword("");};
  const isOwner=profile?.role==="owner";
  const scoped=useMemo(()=>quotes.filter(q=>filter==="all"||q.branch===filter),[quotes,filter]);
  const active=scoped.filter(q=>!q.deleted_at);
@@ -45,7 +73,8 @@ export default function AdminPanel(){
  }),[scoped,tab,statusFilter,search]);
  const open=q=>{setSelected(q);setNote(q.internal_note||"");};
  if(!configured)return <div className="container admin-shell"><h1>Güneş Metal Yönetim Paneli</h1><p>Güvenli girişin açılması için Supabase bağlantı ayarları henüz tanımlanmadı.</p></div>;
- if(!token)return <div className="admin-auth"><div className="admin-auth-brand"><span>GM</span><strong>GÜNEŞ METAL</strong><small>YÖNETİM SİSTEMİ</small></div><form className="admin-login" onSubmit={login}><span className="section-kicker">YETKİLİ ERİŞİMİ</span><h1>Hoş geldiniz</h1><p>Teklif ve şube yönetimi için hesabınıza giriş yapın.</p><label>E-posta<input required type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)}/></label><label>Şifre<input required type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)}/></label><button className="admin-main-btn" disabled={busy}>{busy?"Giriş yapılıyor...":"Giriş Yap →"}</button>{error&&<p role="alert" className="admin-error">{error}</p>}</form></div>;
+ if(restoring)return <div className="admin-auth"><p>Güvenli oturum kontrol ediliyor...</p></div>;
+ if(!token)return <div className="admin-auth"><div className="admin-auth-brand"><span>GM</span><strong>GÜNEŞ METAL</strong><small>YÖNETİM SİSTEMİ</small></div><form className="admin-login" onSubmit={login}><span className="section-kicker">YETKİLİ ERİŞİMİ</span><h1>Hoş geldiniz</h1><p>Teklif ve şube yönetimi için hesabınıza giriş yapın.</p><label>E-posta<input required type="email" autoComplete="username" value={email} onChange={e=>setEmail(e.target.value)}/></label><label>Şifre<input required type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)}/></label><label className="admin-remember"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Oturumu açık tut (bu cihazda)</label><button className="admin-main-btn" disabled={busy}>{busy?"Giriş yapılıyor...":"Giriş Yap →"}</button>{error&&<p role="alert" className="admin-error">{error}</p>}</form></div>;
  return <div className="admin-app">
   <aside className="admin-sidebar"><div className="admin-logo"><span>GM</span><div><strong>GÜNEŞ METAL</strong><small>YÖNETİM PANELİ</small></div></div><p className="admin-nav-label">ÇALIŞMA ALANI</p><nav aria-label="Yönetim menüsü"><button className={tab==="overview"?"active":""} onClick={()=>{setTab("overview");setStatusFilter("all");}}>▦ <span>Genel Bakış</span></button><button className={tab==="requests"?"active":""} onClick={()=>{setTab("requests");setStatusFilter("all");}}>▤ <span>Teklif Talepleri</span><em>{active.length}</em></button><button className={tab==="archive"?"active":""} onClick={()=>{setTab("archive");setStatusFilter("all");}}>▧ <span>Arşiv</span></button></nav><div className="admin-sidebar-bottom"><span className="admin-live-dot"/> Güvenli yönetim alanı <small>Güneş Metal © {new Date().getFullYear()}</small></div></aside>
   <div className="admin-workspace"><header className="admin-topbar"><div><span className="admin-top-eyebrow">GÜNEŞ METAL / {tab==="overview"?"GENEL BAKIŞ":tab==="requests"?"TEKLİF TALEPLERİ":"ARŞİV"}</span><strong>{isOwner?"Tüm Şubeler":branchName(profile.branch)} Yönetimi</strong></div><div className="admin-top-actions"><button onClick={()=>refresh(token).catch(e=>setError(e.message))} disabled={busy}>↻ Yenile</button><span className="admin-avatar">{(profile?.full_name||"Y").slice(0,1).toLocaleUpperCase("tr-TR")}</span><div className="admin-user"><strong>{profile?.full_name||"Yetkili"}</strong><small>{isOwner?"Ana Yönetici":branchName(profile.branch)+" Yetkilisi"}</small></div><button onClick={logout}>Çıkış</button></div></header>
