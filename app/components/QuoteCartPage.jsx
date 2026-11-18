@@ -12,12 +12,34 @@ export default function QuoteCartPage(){
  const p=products.find(x=>x.slug===slug);
  const choices=subcategories[slug]||[];
  const submit=e=>{e.preventDefault();const q=Number(quantity);if(!Number.isSafeInteger(q)||q<1||q>1000000){setMessage("Adet 1 ile 1.000.000 arasında tam sayı olmalıdır.");return;}if(!dimensions.trim()){setMessage("Ölçü bilgilerini girin (ör. Ø50 × 1000 mm).");return;}if(items.length>=50){setMessage("Sepet en fazla 50 kalem içerebilir.");return;}add({slug,name:p.name,subcategory:choices.find(x=>x.slug===subcategory)?.name||"",form:fmt(form),dimensions:fmt(dimensions),quantity:q,notes:fmt(notes)});setDimensions("");setQuantity("1");setNotes("");setMessage("Ürün teklif sepetine eklendi.");};
- const body=["GÜNEŞ METAL - TOPLU TEKLİF TALEBİ","Şube: "+branches[branch].name,customer.trim()?"Firma / İsim: "+fmt(customer):"",contact.trim()?"İletişim: "+fmt(contact):"","",...items.flatMap((x,i)=>[String(i+1)+". "+x.name+(x.subcategory?" / "+x.subcategory:""),"Ürün formu: "+(x.form||"Belirtilmedi"),"Ölçüler: "+x.dimensions,"Adet: "+x.quantity,x.notes?"Not: "+x.notes:"",""]),"Stok, fiyat, termin ve varsa sertifika bilgisi için dönüş rica ederim."].filter(Boolean).join("\n");
- const subject="Güneş Metal - "+items.length+" kalem toplu teklif talebi";
+ const body=[
+  "*GÜNEŞ METAL | TEKLİF TALEBİ*",
+  "",
+  "*MÜŞTERİ BİLGİLERİ*",
+  "Firma: "+fmt(customer),
+  "İletişim: "+fmt(contact),
+  "Tercih edilen şube: "+branches[branch].name,
+  "",
+  "*TALEP EDİLEN ÜRÜNLER*",
+  "",
+  ...items.flatMap((x,i)=>[
+   "*"+(i+1)+". "+(x.subcategory||x.name)+"*",
+   ...(x.subcategory?["Malzeme grubu: "+x.name]:[]),
+   ...(x.form?["Ürün formu: "+fmt(x.form)]:[]),
+   "Ölçüler: "+fmt(x.dimensions),
+   "Miktar: "+x.quantity+" adet",
+   ...(x.notes?["Not: "+fmt(x.notes)]:[]),
+   ""
+  ]),
+  "*TALEP DETAYI*",
+  "Belirtilen ürünler için fiyat, stok durumu ve tahmini teslim süresi hakkında bilgi rica ederim.",
+  "Ürün sertifikaları talep edilmesi halinde paylaşılır."
+ ].join("\n");
+ const subject="Güneş Metal | "+items.length+" kalem teklif talebi";
  const validCustomer=customer.trim().length>0;
  const validContact=/^(?:\+?[0-9\s()\-]{10,}|[^\s@]+@[^\s@]+\.[^\s@]+)$/.test(contact.trim());
  const canSend=items.length>0&&validCustomer&&validContact;
  const mail="mailto:"+branches[branch].email+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
- const wa="https://wa.me/"+branches[branch].phone+"?text="+encodeURIComponent(subject+"\n\n"+body);
+ const wa="https://wa.me/"+branches[branch].phone+"?text="+encodeURIComponent(body);
  return <main className="quote-page"><div className="container"><Link href="/#urunler" className="detail-back">← Ürün kataloğuna dön</Link><span className="section-kicker">GÜNEŞ METAL / TEKLİF</span><h1>Toplu teklif sepeti</h1><p>Birden fazla malzeme için ölçü ve adet bilgilerinizi tek talepte iletin. Sepette fiyat veya stok bilgisi gösterilmez.</p><div className="quote-layout"><section className="quote-card"><h2>Ürün ekle</h2><form onSubmit={submit} className="quote-form"><label>Malzeme grubu<select value={slug} onChange={e=>{setSlug(e.target.value);setSubcategory("");setForm("");}}>{products.map(x=><option key={x.slug} value={x.slug}>{x.name}</option>)}</select></label>{choices.length>0&&<label>Alt kategori / kalite<select value={subcategory} onChange={e=>setSubcategory(e.target.value)}><option value="">Belirtmek istemiyorum</option>{choices.map(x=><option key={x.slug} value={x.slug}>{x.name}</option>)}</select></label>}<label>Ürün formu (isteğe bağlı)<input value={form} maxLength={80} onChange={e=>setForm(e.target.value)} placeholder="Örn. yuvarlak çubuk, lama, boru"/></label><label>Ölçüler (zorunlu)<input required value={dimensions} maxLength={180} onChange={e=>setDimensions(e.target.value)} placeholder="Örn. Ø50 × 1000 mm / 25 × 50 × 500 mm"/></label><label>Adet<input type="number" min="1" max="1000000" step="1" required value={quantity} onChange={e=>setQuantity(e.target.value)}/></label><label>Ürün notu (isteğe bağlı)<textarea rows={2} maxLength={350} value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Kesim, tolerans veya diğer talepler"/></label><button className="button primary" type="submit">+ Sepete ekle</button><p aria-live="polite" className="quote-feedback">{message}</p></form></section><section className="quote-card"><h2>Sepetim ({ready?items.length:0})</h2>{items.length===0?<p>Sepetiniz boş. Soldaki formdan ürün ekleyebilirsiniz.</p>:<><ul className="quote-items">{items.map((x,i)=><li key={x.id}><div><strong>{i+1}. {x.name}{x.subcategory?" / "+x.subcategory:""}</strong><small>{x.form&&x.form+" · "}{x.dimensions} · {x.quantity} adet</small>{x.notes&&<small>Not: {x.notes}</small>}</div><button type="button" onClick={()=>remove(x.id)} aria-label={x.name+" kalemini sepetten çıkar"}>Sil</button></li>)}</ul><button className="quote-clear" type="button" onClick={clear}>Sepeti temizle</button></>}<div className="quote-send"><h3>Teklif talebini gönder</h3><label>Şube seçin<select value={branch} onChange={e=>setBranch(e.target.value)}><option value="tuzla">Tuzla</option><option value="ikitelli">İkitelli</option></select></label><label>Firma adı <span aria-hidden="true">*</span><input required value={customer} maxLength={120} onChange={e=>setCustomer(e.target.value)} placeholder="Firma adınızı girin"/></label><label>Telefon veya e-posta <span aria-hidden="true">*</span><input required value={contact} maxLength={120} onChange={e=>setContact(e.target.value)} placeholder="Telefon numarası veya e-posta adresi"/></label>{!canSend&&<p className="quote-feedback" role="status">Teklif göndermek için sepete ürün ekleyin, firma adını ve geçerli bir telefon numarası veya e-posta adresi girin.</p>}<div className="quote-send-actions"><a className={"button primary"+(!canSend?" quote-disabled":"")} href={canSend?wa:undefined} target="_blank" rel="noopener noreferrer" aria-disabled={!canSend} onClick={e=>{if(!canSend)e.preventDefault();}}>WhatsApp ile gönder ↗</a><a className={"button outline"+(!canSend?" quote-disabled":"")} href={canSend?mail:undefined} aria-disabled={!canSend} onClick={e=>{if(!canSend)e.preventDefault();}}>E-posta ile gönder ↗</a></div><p className="quote-footnote">Gönder butonları seçtiğiniz uygulamada hazır mesaj açar; talebin iletilmesi için WhatsApp veya e-posta uygulamasında gönderimi onaylamanız gerekir. Ürünlerin stok ve fiyatı şubeden teyit edilir.</p></div></section></div></div></main>;
 }
