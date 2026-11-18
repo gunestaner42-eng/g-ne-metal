@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { products } from "./products";
+import {filterProducts,productSearchMeta} from "./productSearch.mjs";
 const slides = [
   { tag: "1988'DEN BUGÜNE", title: "Sanayinin gücü, malzemenin kalitesi.", detail: "Bakır, bronz, alüminyum ve pirinç ürünlerinde geniş seçenekler. Endüstriyel ihtiyaçlarınız için Güneş Metal yanınızda.", label: "Ürünleri Keşfet", href: "#urunler", image: products.find(p => p.slug === "bakir")?.image, imageLabel: "Bakır ürünleri", category: "METAL ÜRÜNLERİ", note: "Bakır · Bronz · Pirinç · Alüminyum" },
   { tag: "GENİŞ ÜRÜN YELPAZESİ", title: "Her projeye uygun metal çözümleri.", detail: "Farklı alaşım ve ürün formlarını inceleyin, ölçülerinize uygun malzemeyi kolayca bulun.", label: "Metalleri İncele", href: "#urunler", image: products.find(p => p.slug === "bronz")?.image, imageLabel: "Bronz ürünleri", category: "ENDÜSTRİYEL METALLER", note: "Kaliteye göre ürün ve ağırlık hesaplama" },
@@ -14,6 +15,9 @@ const slides = [
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [group,setGroup] = useState("all");
+  const [form,setForm] = useState("all");
+  const [grade,setGrade] = useState("all");
   const [slide, setSlide] = useState(0);
   const [manualPaused, setManualPaused] = useState(false);
   const [hoverPaused, setHoverPaused] = useState(false);
@@ -25,9 +29,11 @@ export default function Home() {
     return () => clearInterval(id);
   }, [paused]);
 
-  const visible = products.filter((p) =>
-    `${p.name} ${p.desc}`.toLocaleLowerCase("tr-TR").includes(search.toLocaleLowerCase("tr-TR"))
-  );
+  const visible = filterProducts(products,{search,group,form,grade});
+  const formOptions=[...new Set(Object.values(productSearchMeta).filter(m=>group==="all"||m.group===group).flatMap(m=>m.forms))].sort((a,b)=>a.localeCompare(b,"tr"));
+  const gradeOptions=[...new Set(Object.values(productSearchMeta).filter(m=>(group==="all"||m.group===group)&&(form==="all"||m.forms.includes(form))).flatMap(m=>m.grades))].sort((a,b)=>a.localeCompare(b,"tr"));
+  const resetFilters=()=>{setSearch("");setGroup("all");setForm("all");setGrade("all");};
+  const hasFilters=Boolean(search.trim())||group!=="all"||form!=="all"||grade!=="all";
   const closeMenu = () => setMenuOpen(false);
 
   return (
@@ -85,8 +91,9 @@ export default function Home() {
 
         <section className="section products-section" id="urunler"><div className="container">
           <div className="section-top"><div><span className="section-kicker">ÜRÜN KATALOĞU</span><h2>Ürün gruplarımız</h2><p>İhtiyacınız olan malzemeyi kolayca bulun.</p></div><label className="search-box"><span aria-hidden="true">⌕</span><input type="search" placeholder="Ürün veya malzeme ara..." value={search} onChange={e => setSearch(e.target.value)} aria-label="Ürün ara" /></label></div>
+          <div className="catalog-filters" role="search" aria-label="Ürün arama ve filtreleme"><label>Malzeme grubu<select value={group} onChange={e=>{setGroup(e.target.value);setForm("all");setGrade("all");}}><option value="all">Tüm malzemeler</option><option value="metal">Metaller</option><option value="plastik">Mühendislik plastikleri</option></select></label><label>Ürün formu<select value={form} onChange={e=>{setForm(e.target.value);setGrade("all");}}><option value="all">Tüm formlar</option>{formOptions.map(f=><option key={f} value={f}>{f}</option>)}</select></label><label>Kalite / Alaşım<select value={grade} onChange={e=>setGrade(e.target.value)}><option value="all">Tüm kaliteler</option>{gradeOptions.map(g=><option key={g} value={g}>{g}</option>)}</select></label><div className="catalog-filter-summary"><span aria-live="polite">{visible.length} ürün grubu listeleniyor</span><button type="button" onClick={resetFilters} disabled={!hasFilters}>Filtreleri temizle ↺</button></div></div>
           <div className="product-grid">{visible.map(p => <article className="product-card" key={p.name}><Link className="product-art photo-art" aria-label={`${p.name} kategorisini incele`} href={`/urunler/${p.slug}`}><Image src={p.image} alt={`${p.name} ürün görseli`} width={400} height={300} sizes="(max-width: 420px) 90vw, (max-width: 760px) 45vw, (max-width: 1100px) 30vw, 280px" loading="lazy" /></Link><div className="product-body"><span className="product-overline">GÜNEŞ METAL / ÜRÜNLER</span><h3>{p.name}</h3><p>{p.desc}</p><Link href={`/urunler/${p.slug}`}>Ürünleri İncele <span>↗</span></Link></div></article>)}</div>
-          {visible.length === 0 && <p className="empty-results">Aramanıza uygun ürün bulunamadı. Başka bir kelime deneyin.</p>}
+          {visible.length === 0 && <p className="empty-results">Bu filtrelerle eşleşen ürün grubu bulunamadı. Filtreleri temizleyip tekrar deneyin.</p>}
         </div></section>
 
         <section className="process-section" aria-labelledby="process-title"><div className="container"><div className="process-header"><div><span className="section-kicker">NASIL ÇALIŞIYORUZ?</span><h2 id="process-title">İhtiyacınızdan doğru malzemeye.</h2></div><p>Malzeme seçimi, teorik ağırlık hesabı ve şubeye özel teklif talebini tek akışta tamamlayın.</p></div><div className="process-grid"><div><span>01 / KEŞFET</span><h3>Malzemeyi seçin</h3><p>Bakırdan mühendislik plastiklerine ürün gruplarını ve alaşım seçeneklerini inceleyin.</p></div><div><span>02 / HESAPLA</span><h3>Ölçülerinizi girin</h3><p>Ürün şekline ve malzeme kalitesine göre tahmini kilogram hesabı yapın.</p></div><div><span>03 / TEKLİF AL</span><h3>Şubenizi belirleyin</h3><p>Tuzla veya İkitelli şubesine ölçülerinizi içeren teklif e-postasını hazırlayın.</p></div></div><a className="process-link" href="#urunler">Ürün kataloğuna git <span>↗</span></a></div></section>
