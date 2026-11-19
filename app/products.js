@@ -30,7 +30,7 @@ export const products = [
     "slug": "pirinc",
     "name": "Pirinç",
     "desc": "Profil, boru ve özel ürünler",
-    "image": "https://www.gunesmetaltest.com/wp-content/uploads/2026/07/princ-kategori-gorseli.png",
+    "image": "/pirinc-cubuk.svg",
     "description": "Bakır-çinko alaşımlı pirinç ürünleri.",
     "forms": "Profil, boru, özel imalat",
     "uses": "Makine, bağlantı, dekorasyon"
